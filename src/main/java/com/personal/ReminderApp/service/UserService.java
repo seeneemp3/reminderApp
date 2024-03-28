@@ -15,7 +15,7 @@ public class UserService {
 
     private final UserRepository repository;
 
-    public User getByUsername(String username){
+    public User getByUsername(String username) {
         return repository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(""));
     }
 
@@ -33,7 +33,7 @@ public class UserService {
         }
     }
 
-    public String userInfo(String username){
+    public String userInfo(String username) {
 
         String info = "";
         Optional<User> existingUser = repository.findByUsername(username);

@@ -1,6 +1,8 @@
-package com.personal.ReminderApp.model;
+package com.personal.ReminderApp.model.mapper;
 
 
+import com.personal.ReminderApp.model.Reminder;
+import com.personal.ReminderApp.model.dto.ReminderDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

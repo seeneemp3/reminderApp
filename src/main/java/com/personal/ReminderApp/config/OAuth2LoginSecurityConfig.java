@@ -13,6 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class OAuth2LoginSecurityConfig {
     private final OAuth2LoginSuccessHandler handler;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http

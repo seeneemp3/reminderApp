@@ -2,15 +2,15 @@ package com.personal.ReminderApp.service;
 
 import com.personal.ReminderApp.exception.ReminderNotFoundException;
 import com.personal.ReminderApp.model.Reminder;
-import com.personal.ReminderApp.model.ReminderDto;
 import com.personal.ReminderApp.model.User;
+import com.personal.ReminderApp.model.dto.ReminderDto;
+import com.personal.ReminderApp.model.mapper.ReminderMapper;
 import com.personal.ReminderApp.repository.ReminderRepository;
-import com.personal.ReminderApp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -18,13 +18,11 @@ public class ReminderService {
 
     private final ReminderRepository reminderRepository;
     private final UserService userService;
+    private final ReminderMapper mapper;
 
     public Reminder createReminder(ReminderDto reminderDTO, String username) {
-        Reminder reminder = new Reminder();
-        reminder.setTitle(reminderDTO.getTitle());
-        reminder.setDescription(reminderDTO.getDescription());
-        reminder.setRemind(reminderDTO.getRemind());
 
+        Reminder reminder = mapper.toEntity(reminderDTO);
         User user = userService.getByUsername(username);
         reminder.setUser(user);
 
@@ -38,12 +36,12 @@ public class ReminderService {
 
     public List<Reminder> getAllReminders(String username) {
         User user = userService.getByUsername(username);
-        return reminderRepository.findAllById(Collections.singleton(user.getId()));
+        return reminderRepository.findAllByUserId(user.getId());
     }
 
     public Reminder updateReminder(Long id, ReminderDto reminderDTO, String username) {
         User user = userService.getByUsername(username);
-        if (user.getReminders().stream().anyMatch(reminder -> reminder.getId().equals(id))){
+        if (user.getReminders().stream().anyMatch(reminder -> reminder.getId().equals(id))) {
 
             Reminder reminder = getReminderById(id);
             if (reminderDTO.getTitle() != null && !reminderDTO.getTitle().isEmpty()) {
@@ -57,11 +55,26 @@ public class ReminderService {
             }
             return reminderRepository.save(reminder);
 
-        }else throw new ReminderNotFoundException("Unable to update remind");
+        } else throw new ReminderNotFoundException("Unable to update remind");
     }
 
-    public void deleteReminder(Long id) {
+    public void deleteReminder(Long id, String username) {
+        User user = userService.getByUsername(username);
         Reminder reminder = getReminderById(id);
-        reminderRepository.delete(reminder);
+        if (Objects.equals(reminder.getUser().getId(), user.getId())) {
+            reminderRepository.delete(reminder);
+        }
+    }
+
+    public List<Reminder> searchByTitle(String title, String username) {
+        User user = userService.getByUsername(username);
+        return reminderRepository.findByTitleContaining(title, user)
+                .orElseThrow(() -> new ReminderNotFoundException("Reminder not found"));
+    }
+
+    public List<Reminder> searchByDescription(String description, String username) {
+        User user = userService.getByUsername(username);
+        return reminderRepository.findByDescriptionContaining(description, user)
+                .orElseThrow(() -> new ReminderNotFoundException("Reminder not found"));
     }
 }

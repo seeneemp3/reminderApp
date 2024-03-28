@@ -1,6 +1,5 @@
 package com.personal.ReminderApp.controller;
 
-import com.personal.ReminderApp.repository.UserRepository;
 import com.personal.ReminderApp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +17,7 @@ public class UserController {
     private final UserService service;
 
     @GetMapping
-    public ResponseEntity<String> info(@AuthenticationPrincipal OAuth2User principal){
+    public ResponseEntity<String> info(@AuthenticationPrincipal OAuth2User principal) {
         return ResponseEntity.ok(service.userInfo(principal.getAttribute("login")));
     }
 

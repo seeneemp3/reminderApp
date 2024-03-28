@@ -19,5 +19,4 @@ public class User {
     private String username;
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Reminder> reminders;
-
 }

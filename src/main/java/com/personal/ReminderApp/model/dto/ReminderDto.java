@@ -1,8 +1,9 @@
-package com.personal.ReminderApp.model;
+package com.personal.ReminderApp.model.dto;
 
 import lombok.Data;
 
 import java.time.LocalDateTime;
+
 @Data
 public class ReminderDto {
     private Long id;
@@ -10,4 +11,5 @@ public class ReminderDto {
     private String description;
     private LocalDateTime remind;
     private Long userId;
+
 }

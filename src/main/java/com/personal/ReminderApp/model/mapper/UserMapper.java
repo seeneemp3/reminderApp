@@ -1,6 +1,8 @@
-package com.personal.ReminderApp.model;
+package com.personal.ReminderApp.model.mapper;
 
 
+import com.personal.ReminderApp.model.User;
+import com.personal.ReminderApp.model.dto.UserDto;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

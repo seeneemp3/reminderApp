@@ -1,8 +1,8 @@
 package com.personal.ReminderApp.controller;
 
 import com.personal.ReminderApp.model.Reminder;
-import com.personal.ReminderApp.model.ReminderDto;
-import com.personal.ReminderApp.model.ReminderMapper;
+import com.personal.ReminderApp.model.dto.ReminderDto;
+import com.personal.ReminderApp.model.mapper.ReminderMapper;
 import com.personal.ReminderApp.service.ReminderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +21,13 @@ public class ReminderController {
 
     @PostMapping
     public ResponseEntity<ReminderDto> create(@RequestBody ReminderDto reminder,
-                                              @AuthenticationPrincipal OAuth2User principal){
+                                              @AuthenticationPrincipal OAuth2User principal) {
         Reminder rem = service.createReminder(reminder, principal.getAttribute("login"));
         return ResponseEntity.ok(mapper.toDto(rem));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<ReminderDto>> getAll(@AuthenticationPrincipal OAuth2User principal){
+    public ResponseEntity<List<ReminderDto>> getAll(@AuthenticationPrincipal OAuth2User principal) {
         List<Reminder> list = service.getAllReminders(principal.getAttribute("login"));
         return ResponseEntity.ok(mapper.toDto(list));
     }
@@ -35,15 +35,30 @@ public class ReminderController {
     @PatchMapping("{id}")
     public ResponseEntity<ReminderDto> update(@PathVariable Long id,
                                               @RequestBody ReminderDto reminder,
-                                              @AuthenticationPrincipal OAuth2User principal){
+                                              @AuthenticationPrincipal OAuth2User principal) {
         Reminder rem = service.updateReminder(id, reminder, principal.getAttribute("login"));
         return ResponseEntity.ok(mapper.toDto(rem));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id){
-        service.deleteReminder(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id,
+                                       @AuthenticationPrincipal OAuth2User principal) {
+        service.deleteReminder(id, principal.getAttribute("login"));
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/title")
+    public ResponseEntity<List<ReminderDto>> searchByTitle(@AuthenticationPrincipal OAuth2User principal,
+                                                           @RequestParam String title) {
+        List<Reminder> list = service.searchByTitle(title, principal.getAttribute("login"));
+        return ResponseEntity.ok(mapper.toDto(list));
+    }
+
+    @GetMapping("/description")
+    public ResponseEntity<List<ReminderDto>> searchByDescription(@AuthenticationPrincipal OAuth2User principal,
+                                                                 @RequestParam String description) {
+        List<Reminder> list = service.searchByDescription(description, principal.getAttribute("login"));
+        return ResponseEntity.ok(mapper.toDto(list));
     }
 
 }

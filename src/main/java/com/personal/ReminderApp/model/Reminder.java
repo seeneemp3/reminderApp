@@ -21,5 +21,4 @@ public class Reminder {
     private LocalDateTime remind;
     @ManyToOne
     private User user;
-
 }

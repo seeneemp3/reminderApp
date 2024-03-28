@@ -1,4 +1,4 @@
-package com.personal.ReminderApp.model;
+package com.personal.ReminderApp.model.dto;
 
 import lombok.Data;
 
