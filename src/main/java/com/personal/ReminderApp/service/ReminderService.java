@@ -7,6 +7,8 @@ import com.personal.ReminderApp.model.dto.ReminderDto;
 import com.personal.ReminderApp.model.mapper.ReminderMapper;
 import com.personal.ReminderApp.repository.ReminderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,9 +36,9 @@ public class ReminderService {
                 .orElseThrow(() -> new ReminderNotFoundException("Reminder not found with id: " + id));
     }
 
-    public List<Reminder> getAllReminders(String username) {
+    public Page<Reminder> getAllReminders(String username, Pageable pageable) {
         User user = userService.getByUsername(username);
-        return reminderRepository.findAllByUserId(user.getId());
+        return reminderRepository.findAllByUserId(user.getId(), pageable);
     }
 
     public Reminder updateReminder(Long id, ReminderDto reminderDTO, String username) {
@@ -66,15 +68,15 @@ public class ReminderService {
         }
     }
 
-    public List<Reminder> searchByTitle(String title, String username) {
+    public Page<Reminder> searchByTitle(String title, String username, Pageable pageable) {
         User user = userService.getByUsername(username);
-        return reminderRepository.findByTitleContaining(title, user)
+        return reminderRepository.findByTitleContaining(title, user, pageable)
                 .orElseThrow(() -> new ReminderNotFoundException("Reminder not found"));
     }
 
-    public List<Reminder> searchByDescription(String description, String username) {
+    public Page<Reminder> searchByDescription(String description, String username, Pageable pageable) {
         User user = userService.getByUsername(username);
-        return reminderRepository.findByDescriptionContaining(description, user)
+        return reminderRepository.findByDescriptionContaining(description, user, pageable)
                 .orElseThrow(() -> new ReminderNotFoundException("Reminder not found"));
     }
 }

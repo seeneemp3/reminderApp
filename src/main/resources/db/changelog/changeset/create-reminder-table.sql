@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS reminder;
+
 CREATE TABLE reminder (
 id BIGSERIAL PRIMARY KEY,
 title VARCHAR(255),
