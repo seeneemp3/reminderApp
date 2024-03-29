@@ -19,19 +19,19 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/reminder")
+@RequestMapping("/api/v1/reminder")
 public class ReminderController {
     private final ReminderService service;
     private final ReminderMapper mapper;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<ReminderDto> create(@RequestBody ReminderDto reminder,
                                               @AuthenticationPrincipal OAuth2User principal) {
         Reminder rem = service.createReminder(reminder, principal.getAttribute("login"));
         return ResponseEntity.ok(mapper.toDto(rem));
     }
 
-    @GetMapping("/all")
+    @GetMapping("/list")
     public ResponseEntity<Page<ReminderDto>> getAll(
             @AuthenticationPrincipal OAuth2User principal,
             @RequestParam(defaultValue = "0") int page,
@@ -52,7 +52,7 @@ public class ReminderController {
         return ResponseEntity.ok(mapper.toDto(rem));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id,
                                        @AuthenticationPrincipal OAuth2User principal) {
         service.deleteReminder(id, principal.getAttribute("login"));

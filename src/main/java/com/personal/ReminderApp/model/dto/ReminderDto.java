@@ -1,8 +1,8 @@
 package com.personal.ReminderApp.model.dto;
 
 
-
 import java.time.LocalDateTime;
+
 public class ReminderDto {
     private Long id;
     private String title;

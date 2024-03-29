@@ -11,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -21,14 +20,15 @@ public class ReminderService {
     private final ReminderRepository reminderRepository;
     private final UserService userService;
     private final ReminderMapper mapper;
+    private final SchedulerService schedulerService;
 
     public Reminder createReminder(ReminderDto reminderDTO, String username) {
-
         Reminder reminder = mapper.toEntity(reminderDTO);
         User user = userService.getByUsername(username);
         reminder.setUser(user);
-
-        return reminderRepository.save(reminder);
+        Reminder savedReminder = reminderRepository.save(reminder);
+        schedulerService.scheduleSingleReminder(reminder);
+        return savedReminder;
     }
 
     public Reminder getReminderById(Long id) {
@@ -55,6 +55,8 @@ public class ReminderService {
             if (reminderDTO.getRemind() != null) {
                 reminder.setRemind(reminderDTO.getRemind());
             }
+            schedulerService.deleteReminder(id);
+            schedulerService.scheduleSingleReminder(reminder);
             return reminderRepository.save(reminder);
 
         } else throw new ReminderNotFoundException("Unable to update remind");
@@ -64,6 +66,7 @@ public class ReminderService {
         User user = userService.getByUsername(username);
         Reminder reminder = getReminderById(id);
         if (Objects.equals(reminder.getUser().getId(), user.getId())) {
+            schedulerService.deleteReminder(id);
             reminderRepository.delete(reminder);
         }
     }

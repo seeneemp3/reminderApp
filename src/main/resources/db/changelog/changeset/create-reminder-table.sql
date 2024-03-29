@@ -6,5 +6,5 @@ title VARCHAR(255),
 description VARCHAR(4096),
 remind TIMESTAMP,
 user_id BIGINT,
-CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE SET NULL
+CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
