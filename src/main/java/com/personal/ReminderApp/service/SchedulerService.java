@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 @Slf4j
 @Service
@@ -32,7 +33,9 @@ public class SchedulerService {
                 .build();
 
         LocalDateTime triggerDateTime = reminder.getRemind();
-        Date triggerDate = Date.from(triggerDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        Date triggerDate = Date.from(triggerDateTime
+                .atZone(TimeZone.getTimeZone("Europe/Moscow").toZoneId())
+                .toInstant());
         log.info("Job " + reminder.getTitle() + " will start at:" + triggerDate);
 
         Trigger trigger = TriggerBuilder.newTrigger()
