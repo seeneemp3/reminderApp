@@ -34,5 +34,4 @@ public class TerminalNotificationService implements NotificationService, Job {
         notify(reminder);
     }
 
-
 }
