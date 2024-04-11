@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/changeset/create-users-table.sql
   - include:
       file: db/changelog/changeset/create-reminder-table.sql
+  - include:
+      file: db/changelog/changeset/insert-into-reminder-and-user.sql
